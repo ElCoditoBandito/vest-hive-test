@@ -1,0 +1,46 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  clerkId       String    @unique
+  email         String    @unique
+  name          String?
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships
+  clubs         ClubMember[]
+  teams         TeamMember[]
+  votes         Vote[]
+  comments      Comment[]
+}
+
+model Club {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Financial tracking
+  brokerageConnections BrokerageConnection[]
+  totalFunds    Decimal   @default(0)
+  
+  // Relationships
+  members       ClubMember[]
+  teams         Team[]
+  proposals     Proposal[]
+  transactions  Transaction[]
+}
+
+// Additional models same as in previous schema...
